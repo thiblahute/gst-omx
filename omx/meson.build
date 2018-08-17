@@ -58,3 +58,5 @@ gstomx = library('gstomx',
   install : true,
   install_dir : plugins_install_dir,
 )
+
+install_data (['vc/lib/libbcm_host.so', 'vc/lib/libopenmaxil.so'], install_dir : 'opt/vc/lib/')

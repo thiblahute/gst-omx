@@ -163,16 +163,19 @@ gmodule_dep = dependency('gmodule-2.0', version : glib_req)
 
 gst_omx_args = ['-DHAVE_CONFIG_H']
 configinc = include_directories('.')
+omx_target = get_option ('with_omx_target')
 omx_header_path = get_option('with_omx_header_path')
 if omx_header_path != ''
   omx_inc = []
   gst_omx_args += ['-I' + omx_header_path]
+elif omx_target == 'rpi'
+  omx_inc = []
+  gst_omx_args += ['-I' + join_paths(meson.current_source_dir(), 'omx/vc/')]
 else
   omx_inc = include_directories (join_paths ('omx', 'openmax'))
 endif
 
 default_omx_struct_packing = 0
-omx_target = get_option ('with_omx_target')
 if omx_target == 'generic'
   cdata.set('USE_OMX_TARGET_GENERIC', 1)
 elif omx_target == 'rpi'
@@ -285,7 +288,7 @@ endif
 have_omx_vp8 = cc.has_header_symbol(
     'OMX_Video.h',
     'OMX_VIDEO_CodingVP8',
-    prefix : extra_video_headers, 
+    prefix : extra_video_headers,
     args : gst_omx_args,
     include_directories : [omx_inc],
     required : false)
